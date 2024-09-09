@@ -16,6 +16,27 @@ if ( file_exists( __DIR__.'/autoload.php')){
 </head>
 <body>
     
+<?php
+
+// server request method
+if ($_SERVER['REQUEST_METHOD'] == "POST" ){
+    //get values
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
+    $location = $_POST["location"];
+    $gender = $_POST["gender"] ?? ''; 
+
+    if ( empty($name) || empty($email) || empty($phone) || empty($location) ){
+        $msg = creatAlert("All  fields are required" );
+    }else{
+        $msg = creatAlert("Data stable", "success");
+    }
+    
+}
+
+?>
+
 
 <div class="container my-5">
     <div class="row justify-content-center my-5">
@@ -23,22 +44,25 @@ if ( file_exists( __DIR__.'/autoload.php')){
             <div class="card">
                 <h2 class="card-header">Creat an account</h2>
                 <div class="card-body">
-                    <form action="" >
+                    <div class="msg">
+                        <?php echo $msg  ?? ''; ?>
+                    </div>
+                    <form action="" method="POST">
                         <div class="my-3">
                             <label for="">Name</label>
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" name="name">
                         </div>
                         <div class="my-3">
                             <label for="">Email</label>
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" name="email">
                         </div>
                         <div class="my-3">
                             <label for="">Phone</label>
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" name="phone">
                         </div>
                         <div class="my-3">
                             <label for="" >Location</label>
-                            <select name="" id="" class="form-control">
+                            <select name="location" id="" class="form-control">
                                 <option value="">-Select-</option>
                                 <option value="Ashugonj">Ashugonj</option>
                                 <option value="Voirob">Voirob</option>
