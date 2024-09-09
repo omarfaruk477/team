@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" ){
                 <div class="col-md-4">
                     <div class="card mb-5">
                         <div class="card-body">
-                            <img class="w-100 rounded image" src="<?php echo $team -> photo; ?>"  alt="">
+                            <img class="w-100" src="<?php echo $team -> photo; ?>"  alt="" height='250'>
                             <h4><?php echo $team -> name; ?></h4>
                             <p><?php echo $team -> email; ?></p>
                             <p><?php echo $team -> phone; ?></p>
