@@ -21,13 +21,14 @@ if ( file_exists( __DIR__.'/autoload.php')){
 // server request method
 if ($_SERVER['REQUEST_METHOD'] == "POST" ){
     //get values
+    $photo  =$_POST["photo"];
     $name = $_POST["name"];
     $email = $_POST["email"];
     $phone = $_POST["phone"];
     $location = $_POST["location"];
     $gender = $_POST["gender"] ?? ''; 
 
-    if ( empty($name) || empty($email) || empty($phone) || empty($location) || empty($gender) ){
+    if ( empty($photo) || empty($name) || empty($email) || empty($phone) || empty($location) || empty($gender) ){
         $msg = creatAlert("All  fields are required" );
     }elseif (filter_var( $email, FILTER_VALIDATE_EMAIL) == FALSE ){
         $msg = creatAlert("Invalid Email Address", "warning");
@@ -41,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" ){
     $data = json_decode(file_get_contents('./db/team.json'), true);
 
     array_push($data, [
+        "photo"     =>  $photo,
         "name"      =>  $name,
         "email"     =>  $email,
         "phone"     =>  $phone,
@@ -58,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" ){
 
 
 <div class="container my-5">
-    <div class="row justify-content-center my-5">
-        <div class="col-md-5 my-3">
+    <div class="row my-5">
+        <div class="col-md-4 my-3">
             <div class="card">
                 <h2 class="card-header">Creat an account</h2>
                 <div class="card-body">
@@ -67,6 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" ){
                         <?php echo $msg  ?? ''; ?>
                     </div>
                     <form action="" method="POST">
+                    <div class="my-3">
+                            <label for="">Photo</label>
+                            <input type="text" class="form-control" value="<?php echo old("photo"); ?>" name="photo">
+                            <?php echo checkRequired("photo") ;?>
+                        </div>
                         <div class="my-3">
                             <label for="">Name</label>
                             <input type="text" class="form-control" value="<?php echo old("name"); ?>" name="name">
@@ -105,6 +112,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" ){
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 my-3">
+            <div class="row">
+
+                <?php
+                $teamData = json_decode(file_get_contents('./db/team.json'));
+                foreach($teamData as $team) :
+                ?>
+                <div class="col-md-4">
+                    <div class="card mb-5">
+                        <div class="card-body">
+                            <img class="w-100 rounded image" src="<?php echo $team -> photo; ?>"  alt="">
+                            <h4><?php echo $team -> name; ?></h4>
+                            <p><?php echo $team -> email; ?></p>
+                            <p><?php echo $team -> phone; ?></p>
+                            <p><?php echo $team -> location; ?></p>
+                            <p><?php echo $team -> gender; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach ; ?>
             </div>
         </div>
     </div>
