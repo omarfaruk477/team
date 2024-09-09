@@ -27,12 +27,31 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" ){
     $location = $_POST["location"];
     $gender = $_POST["gender"] ?? ''; 
 
-    if ( empty($name) || empty($email) || empty($phone) || empty($location) ){
+    if ( empty($name) || empty($email) || empty($phone) || empty($location) || empty($gender) ){
         $msg = creatAlert("All  fields are required" );
+    }elseif (filter_var( $email, FILTER_VALIDATE_EMAIL) == FALSE ){
+        $msg = creatAlert("Invalid Email Address", "warning");
     }else{
         $msg = creatAlert("Data stable", "success");
+        resetForm();
     }
+
+
+    // Storage data to JSON DB
+    $data = json_decode(file_get_contents('./db/team.json'), true);
+
+    array_push($data, [
+        "name"      =>  $name,
+        "email"     =>  $email,
+        "phone"     =>  $phone,
+        "location"  =>  $location,
+        "gender"    =>  $gender,
+    ]);
+    file_put_contents('./db/team.json', json_encode($data));
     
+
+
+
 }
 
 ?>
@@ -50,32 +69,35 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" ){
                     <form action="" method="POST">
                         <div class="my-3">
                             <label for="">Name</label>
-                            <input type="text" class="form-control" name="name">
+                            <input type="text" class="form-control" value="<?php echo old("name"); ?>" name="name">
+                            <?php echo checkRequired("name") ;?>
                         </div>
                         <div class="my-3">
                             <label for="">Email</label>
-                            <input type="text" class="form-control" name="email">
+                            <input type="text" class="form-control" value="<?php echo old("email"); ?>" name="email">
+                            <?php echo checkRequired("email") ;?>
                         </div>
                         <div class="my-3">
                             <label for="">Phone</label>
-                            <input type="text" class="form-control" name="phone">
+                            <input type="text" class="form-control" value="<?php echo old("phone"); ?>" name="phone">
+                            <?php echo checkRequired("phone") ;?>
                         </div>
                         <div class="my-3">
                             <label for="" >Location</label>
                             <select name="location" id="" class="form-control">
                                 <option value="">-Select-</option>
-                                <option value="Ashugonj">Ashugonj</option>
-                                <option value="Voirob">Voirob</option>
-                                <option value="Brahmonbaria">Brahmonbaria</option>
-                                <option value="Kishorgonj">Kishorgonj</option>
+                                <option <?php echo old('location') == "Ashugonj" ? "Selected" : "" ; ?> value="Ashugonj">Ashugonj</option>
+                                <option <?php echo old('location') == "Voirob" ? "Selected" : "" ; ?> value="Voirob">Voirob</option>
+                                <option <?php echo old('location') == "Brahmonbaria" ? "Selected" : "" ; ?> value="Brahmonbaria">Brahmonbaria</option>
+                                <option <?php echo old('location') == "Kishorgonj" ? "Selected" : "" ; ?> value="Kishorgonj">Kishorgonj</option>
                             </select>
                         </div>
                         <div class="my-3">
                             <label for="">
-                                <input type="radio" name="gender" value="male"> Male
+                                <input type="radio" name="gender" <?php echo old('gender') == "Male" ? "checked" : "" ; ?> value="Male"> Male
                             </label>
                             <label for="">
-                                <input type="radio" name="gender" value="female"> Female
+                                <input type="radio" name="gender" <?php echo old('gender') == "Female" ? "checked" : "" ; ?> value="Female"> Female
                             </label>
                         </div>
                         <div class="my-3">
